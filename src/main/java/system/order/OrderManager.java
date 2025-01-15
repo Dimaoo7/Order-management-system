@@ -1,10 +1,16 @@
 package system.order;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import system.order.Dto.Order;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class OrderManager {
+
+    public static final Logger logger = LoggerFactory.getLogger(OrderManager.class);
 
     public List<Order> orders;
 
@@ -14,12 +20,12 @@ public class OrderManager {
 
     public void addOrder(Order order) {
         orders.add(order);
-        System.out.println("Order successfully added");
+        logger.info("Order was successfully added {}", order);
     }
 
     public void showAllOrders(Order order) {
         if (orders.isEmpty()) {
-            System.out.println("No orders available");
+            logger.info("No orders available");
         } else {
             orders.forEach(System.out::println);
         }
@@ -34,9 +40,9 @@ public class OrderManager {
     public void deleteOrder(Long id) {
         boolean removed = orders.removeIf(order -> order.getId().equals(id));
         if (removed) {
-            System.out.println("Order with ID " + id + " successfully removed.");
+            logger.info("Order with ID {} successfully removed.", id);
         } else {
-            System.out.println("Order with ID " + id + " not found.");
+            logger.info("Order with ID {} not found.", id);
         }
     }
 
@@ -46,9 +52,9 @@ public class OrderManager {
                     order.setDescription(newDescription);
                     order.setAmount(newAmount);
                     order.setStatus(newStatus);
-                    System.out.println("Order updated: " + order);
+                    logger.info("Order updated: {}", order);
                 },
-                () -> System.out.println("Order with ID " + id + " not found")
+                () -> logger.info("Order with ID {} not found", id)
         );
     }
 
@@ -57,7 +63,7 @@ public class OrderManager {
                 .filter(order -> order.getStatus().equalsIgnoreCase(status))
                 .collect(Collectors.toList());
         if (filteredOrders.isEmpty()) {
-            System.out.println("No orders with status:" + status);
+            logger.info("No orders with status:{}", status);
         } else {
             filteredOrders.forEach(System.out::println);
         }

@@ -1,6 +1,6 @@
-package system.order;
+package system.order.Repository;
 
-import system.order.Db.DatabaseConnection;
+import system.order.Database.DatabaseConnection;
 import system.order.Dto.Order;
 
 import java.sql.Connection;

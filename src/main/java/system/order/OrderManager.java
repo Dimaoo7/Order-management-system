@@ -3,8 +3,12 @@ package system.order;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import system.order.Database.DatabaseConnection;
 import system.order.Dto.Order;
 
+import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,10 +85,41 @@ public class OrderManager {
                 .count();
     }
 
+    //Достает все заказы из бд
+    public void getAllOrders(Order order) throws SQLException {
+        String sql = "SELECT * FROM orders";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, order.getId());
+            preparedStatement.setString(2, order.getDescription());
+            preparedStatement.setInt(3, order.getAmount());
+            preparedStatement.setString(4, order.getStatus());
+            preparedStatement.setDate(5, Date.valueOf(order.getCreatedAt()));
 
+            orders.add(order);
+        }
+    }
 
+    //Добавление нового заказа в бд
+    public void addNewOrderBd(Order order) throws SQLException {
+        String sql = "INSERT INTO orders (client_id, description, amount, status, created_at) VALUES (?,?,?,?,?)";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, order.getId());
+            preparedStatement.setString(2, order.getDescription());
+            preparedStatement.setInt(3, order.getAmount());
+            preparedStatement.setString(4, order.getStatus());
+            preparedStatement.setDate(5, Date.valueOf(order.getCreatedAt()));
 
+            int rowsAffect = preparedStatement.executeUpdate();
+            if (rowsAffect > 0) {
+                System.out.println("Order successfully added to the database.");
+            }
+
+        }
+    }
 }
+
 
 
 

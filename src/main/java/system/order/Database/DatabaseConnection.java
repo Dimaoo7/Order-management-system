@@ -1,4 +1,4 @@
-package system.order.Db;
+package system.order.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
